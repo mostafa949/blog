@@ -1,0 +1,6 @@
+{
+    "Blog": true,
+    "Admin": true,
+    "User": true,
+    "Post": true
+}
