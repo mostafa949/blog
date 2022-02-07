@@ -3,13 +3,14 @@
 namespace Modules\Blog\Entities;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Admin\Entities\Admin;
 
 class Post extends Model
 {
-    use HasFactory, Sluggable;
+    use HasFactory, Sluggable, SluggableScopeHelpers;
 
     protected $fillable = ['slug', 'title', 'description', 'image_path', 'published', 'category_id', 'admin_id'];
 
@@ -25,6 +26,16 @@ class Post extends Model
                 'source' => 'title'
             ]
         ];
+    }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName(): string
+    {
+        return $this->getSlugKeyName();
     }
 
     //Relationship

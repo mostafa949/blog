@@ -22,4 +22,5 @@ Route::prefix('blog')->name('blog.')->group(function() {
     Route::resource('/', 'BlogController');
     Route::resource('/categories', 'CategoryController');
     Route::resource('/posts', 'PostsController');
+    Route::resource('/comments', 'CommentController');
 });

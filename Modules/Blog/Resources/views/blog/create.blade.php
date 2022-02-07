@@ -33,7 +33,7 @@
 
     <div class="w-4/5 m-auto pt-20">
         <form
-            action="/blog"
+            action="{{ route('blog.posts.store') }}"
             method="post"
             enctype="multipart/form-data">
             @csrf

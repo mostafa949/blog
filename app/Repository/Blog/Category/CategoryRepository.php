@@ -7,7 +7,6 @@ use App\Repository\BaseRepository;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Support\Collection;
 use Modules\Blog\Entities\Category;
-use function auth;
 
 class CategoryRepository extends BaseRepository implements CategoryRepositoryInterface
 {
@@ -61,11 +60,15 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
         if (!empty(auth('admin')->user()->id)) {
             $category->admin_id = auth('admin')->user()->id;
         }
+        $category->save();
+        return $category->fresh();
+
     }
 
     public function destroy($category)
     {
         $category->delete();
+        return $category->fresh();
     }
 
     public function where($slug)
