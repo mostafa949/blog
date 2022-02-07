@@ -8,10 +8,8 @@ use Illuminate\Support\Facades\Storage;
 trait MediaTrait
 {
 
-    public function uploads($file, $path, $name = null)
+    public function uploads($file, $path, $name = null): string
     {
-        if ($file) {
-
             $fileName = uniqid() . '-' . str_replace(' ', '-', $name) . '.' . $file->extension();
             Storage::disk('public')->put($path . $fileName, File::get($file));
 //            $file_name = $file->getClientOriginalName();
@@ -19,7 +17,12 @@ trait MediaTrait
 //            $filePath = 'storage/' . $path . $fileName;
 
             return $fileName;
-        }
+    }
+
+    public function updateUpload($file, $fileName, $path)
+    {
+            Storage::disk('public')->put($path . $fileName, File::get($file));
+            return $fileName;
     }
 
     public function delete($path, $fileName)

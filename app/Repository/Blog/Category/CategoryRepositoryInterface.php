@@ -8,6 +8,6 @@ interface CategoryRepositoryInterface
 {
     public function all(): Collection;
     public function create(array $attributes);
-    public function store($request, $newImageName);
-    public function update($request, $newImageName, $slug);
+    public function store($request, $imageName);
+    public function update($request, $fileName, $category);
 }

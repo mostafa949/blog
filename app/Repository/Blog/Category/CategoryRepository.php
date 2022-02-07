@@ -34,32 +34,33 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
         $category->title = $request->input('title');
         $category->description = $request->input('description');
         $category->image_path = $imageName;
-        $category->admin_id = auth('admin')->user()->id;
+        if (!empty(auth('admin')->user()->id)) {
+            $category->admin_id = auth('admin')->user()->id;
+        }
         $category->save();
 
         return $category->fresh();
     }
 
-    public function show($slug)
+    public function show($category)
     {
-        return $this->where($slug);
+        return $category;
     }
 
-    public function edit($slug)
+    public function edit($category)
     {
-        return $this->where($slug);
+        return $category;
     }
 
-    public function update($request, $newImageName, $slug)
+    public function update($request, $fileName, $category)
     {
-        $this->model->where('slug', $slug)
-            ->update([
-                'title' => $request->input('title'),
-                'description' => $request->input('description'),
-                'slug' => SlugService::createSlug($this->model, 'slug', $request->title),
-                'image_path' => $newImageName,
-                'admin_id' => auth('admin')->user()->id
-            ]);
+        $category->title = $request->input('title');
+        $category->description = $request->input('description');
+        $category->slug = SlugService::createSlug($category, 'slug', $request->title);
+        $category->image_path = $fileName;
+        if (!empty(auth('admin')->user()->id)) {
+            $category->admin_id = auth('admin')->user()->id;
+        }
     }
 
     public function destroy($category)

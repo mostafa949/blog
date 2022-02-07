@@ -3,8 +3,10 @@
 namespace Modules\Blog\Http\Controllers;
 
 use App\Services\Blog\Category\CategoryService;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
+use Modules\Blog\Entities\Category;
 use Modules\Blog\Http\Requests\Category\CreateCategoryRequest;
 use Modules\Blog\Http\Requests\Category\UpdateCategoryRequest;
 
@@ -21,7 +23,7 @@ class CategoryController extends Controller
 
     /**
      * Display a listing of the resource.
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|Collection
+     * @return Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|Collection
      */
     public function index()
     {
@@ -42,27 +44,27 @@ class CategoryController extends Controller
             ->with('message', 'Your category has been added.');
     }
 
-    public function show($slug)
+    public function show(Category $category)
     {
         return view('blog::categories.show')
-            ->with('category', $this->categoryService->show($slug));
+            ->with('category', $this->categoryService->show($category));
     }
 
-    public function edit($slug)
+    public function edit(Category $category)
     {
         return view('blog::categories.edit')
-            ->with('category', $this->categoryService->edit($slug));
+            ->with('category', $this->categoryService->edit($category));
     }
 
-    public function update(UpdateCategoryRequest $request, $slug)
+    public function update(UpdateCategoryRequest $request, Category $category): \Illuminate\Http\RedirectResponse
     {
-        $this->categoryService->update($request, $slug);
+        $this->categoryService->update($request, $category);
         return redirect()->route('blog.categories.index');
     }
 
-    public function destroy($slug)
+    public function destroy(Category $category): \Illuminate\Http\RedirectResponse
     {
-        $this->categoryService->destroy($slug);
+        $this->categoryService->destroy($category);
         return redirect()->route('blog.categories.index');
     }
 }

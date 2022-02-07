@@ -5,7 +5,6 @@ namespace App\Services\Blog\Category;
 use App\Repository\Blog\Category\CategoryRepository;
 use App\Traits\general\MediaTrait;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryService
 {
@@ -28,41 +27,33 @@ class CategoryService
     {
         if ($file = $request->file('image')) {
             $imageName = $this->uploads($file, 'images/blog/categories/', $request->title);
+            $this->categoryRepository->store($request, $imageName);
         }
-
-        $this->categoryRepository->store($request, $imageName);
     }
 
-    public function show($slug)
+    public function show($category)
     {
-        return $this->categoryRepository->show($slug);
+        return $this->categoryRepository->show($category);
     }
 
-    public function edit($slug)
+    public function edit($category)
     {
-        return $this->categoryRepository->edit($slug);
+        return $this->categoryRepository->edit($category);
     }
 
-    public function update($request, $slug)
+    public function update($request, $category)
     {
-        $category = $this->categoryRepository->where($slug);
-
         if ($file = $request->file('image')) {
-            if ($category->image_path) {
-                $this->delete('blog/categories/', $category->image_path);
-            }
-
-            $newImageName = $this->uploads($file, 'images/blog/categories/', $request->title);
-            $this->categoryRepository->update($request, $newImageName, $slug);
+            $this->delete('blog/categories/', $category->image_path);
+            $fileName = $this->updateUpload($file, $category->image_path, 'images/blog/categories/');
         } else {
-            $newImageName = $category->image_path;
-            $this->categoryRepository->update($request, $newImageName, $slug);
+            $fileName = $category->image_path;
         }
+        $this->categoryRepository->update($request, $fileName, $category);
     }
 
-    public function destroy($slug)
+    public function destroy($category)
     {
-        $category = $this->categoryRepository->where($slug);
         $this->delete('blog/categories/', $category->image_path);
         $this->categoryRepository->destroy($category);
 
